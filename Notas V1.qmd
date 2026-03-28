@@ -1,0 +1,106 @@
+---
+title: "Notas V1"
+author: "Juan Cordoba"
+format: html
+editor: visual
+---
+
+## Notas de estudiantes. Jornadas manaña, tarde y noche.
+
+Buen día, se nos ha suministrado las notas de los estudiantes de diferentes jornadas. En primer lugar es necesario clasificar las notas en 3 grupos:
+
+Mañana = (M)
+
+Tarde = (T)
+
+Noche = (N)
+
+Ahora bien ya que tenemos defino ello vamos a crear los grupos
+
+```{julia}
+using Statistics
+M= [4.0,3.5,3.8,3.6,4.1]
+T= [3.8,3.5,3.0,2.9]
+N= [3.1,2.5,2.6]
+
+```
+
+Una vez, hecho esto vamos a calcular la media de cada grupo.
+
+```{julia}
+Media_M = mean(M)
+Media_T = mean(T)
+Media_N = mean(N)
+```
+
+Las medias son respectivamente 3.8, 3.3000000000000003, 2.733333333333333
+
+Ahora calcularemos la media total
+
+```{julia}
+MTN = [4.0,3.5,3.8,3.6,4.1,3.8,3.5,3.0,2.9,3.1,2.5,2.6]
+Media_MTN = mean(MTN)
+Media_MTN
+```
+
+La media total es de aproximadamente: 3.366666666666667
+
+Ahora bien vamos a calcular la varianza poblacional y muestral para cada una de las jornadas.
+
+```{julia}
+var_total_M = var(M, corrected=false)
+var_total_T = var(T, corrected=false)
+var_total_N = var(N, corrected=false)
+```
+
+##### Las varianzas poblacionales son las siguientes respectivamente:
+
+0.051999999999999956, 0.13499999999999998, 0.0688888888888889
+
+Mientras que las varianzas muéstrales son :
+
+```{julia}
+var_total_MM = var(M, corrected=true)
+var_total_TM = var(T, corrected=true)
+var_total_NM = var(N, corrected=true)
+```
+
+0.06499999999999995, 0.17999999999999997, 0.10333333333333335
+
+#### Ahora vamos a calcular la varianza poblacional y muestral total
+
+```{julia}
+var_total = var(MTN, corrected=false)
+var_total = var(MTN, corrected=true)
+```
+
+Siendo alrededor de : 0.263888888888888 y la muestral de : 0.28787878787878785
+
+### A continuación vamos a calcular las varianzas de las medias, para ello vamos a crea un nuevo vector llamado medias
+
+```{julia}
+Medias = [Media_N,Media_T,Media_M]
+```
+
+Ahora bien vamos a calcular la varianza con este vector
+
+```{julia}
+var_Medias = var(Medias, corrected=false)
+var_Medias = var(Medias, corrected=true)
+```
+
+## La varianza de las medias son:
+
+Poblacional : 0.18987654320987665
+
+Muestral : 0.28481481481481496
+
+## Media de las varianzas
+
+Ahora proseguiremos hallando la media de las varianzas con el siguiente comando
+
+```{julia}
+medias_var = mean([var_total_M, var_total_T, var_total_N])
+```
+
+La media de las varianzas (poblacional) es 0.08529629629629627
