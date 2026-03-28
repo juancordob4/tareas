@@ -1,0 +1,698 @@
+---
+title: "Exercises GGPLOT2"
+author: "Juan Cordoba"
+format: html
+editor: visual
+---
+
+## Ejercicios de GGPLOT2
+
+## Juan Córdoba - Estadística Descriptiva
+
+Buen día, en el siguiente documento, desarrollaremos unos ejercicios con el paquete de GGPLOT2. El objetivo es aprender las principales funciones y característica de este paquete.
+
+## A. Instalar y configurar GGPndefinedLOT2
+
+Ahora bien iniciaremos instalando e iniciando el paquete.
+
+```{r}
+library(ggplot2)
+```
+
+## 1. Exercise
+
+Vamos a utilizar esta dataset modificado en el cual tenemos un grupo de Tomasinos clasificados en genero, carrera y ademas con sus horas de estudio
+
+```{r}
+
+Tomasinos <- data.frame(
+id = 1:20,
+horas_de_estudio = c(2,3,4,5,6,3,4,7,8,5,6,7,3,2,9,10,4,6,8,5),
+nota = c(25,28,33,35,38,30,33,40,43,36,37,39,29,26,45,48,34,38,44,37),
+genero = rep(c("Hombre","Mujer"), 10),
+carrera = rep(c("Estadistica","Negocios","Danza","Derecho"), 5))
+```
+
+## 1.1 Basic plots
+
+1.Gráfico de dispersión básico entre horas de estudio y puntaje.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota)) +
+  geom_point()
+```
+
+2.  Mismo gráfico con todos los puntos en color azul.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota)) +
+  geom_point(color = "blue")
+```
+
+3.  Colorea los puntos según el género del estudiante.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point()
+```
+
+4.  Aumenta el tamaño de todos los puntos del gráfico.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4)
+```
+
+5.  Agrega un título al gráfico.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  labs(title = "Horas_de_estudio_vs_Puntaje")
+```
+
+## 1.2 Labels and themes
+
+6\. Agrega etiquetas a los ejes x e y.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  labs(title = "Horas_de_estudio_vs_Puntaje", x = "Horas_de_estudio", y = "Puntaje")
+```
+
+7.  Usa el tema theme_minimal().
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  labs(title = "Horas_de_estudio_vs_Puntaje", x = "Horas_de_estudio", y = "Puntaje") +
+  theme_minimal()
+
+```
+
+8.  Centra el título.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  labs(title = "Horas_de_estudio_vs_Puntaje", x = "Horas_de_estudio", y = "Puntaje") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+9.  Cambia el tamaño del texto de las etiquetas de los ejes.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  labs(title = "Horas_de_estudio_vs_Puntaje", x = "Horas_de_estudio", y = "Puntaje") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 12))
+```
+
+10. Elimina la leyenda.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  labs(title = "Horas_de_estudio_vs_Puntaje", x = "Horas_de_estudio", y = "Puntaje") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 12), legend.position = "none")
+```
+
+## 1.3 Capas geométricas
+
+11\. Agrega una línea de regresión usando geom_smooth().
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  geom_smooth(method = "lm")
+```
+
+12. Cambia el color de la línea de regresión.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 4) +
+  geom_smooth(method = "lm", color = "red")
+```
+
+13. Crea un boxplot de puntaje por género.
+
+```{r}
+ggplot(Tomasinos, aes(x = genero, y = nota)) +
+  geom_boxplot()
+```
+
+14. Crea un histograma de puntaje.
+
+```{r}
+ggplot(Tomasinos, aes(x = nota)) +
+  geom_histogram()
+```
+
+15. Cambia el número de barras del histograma.
+
+```{r}
+ggplot(Tomasinos, aes(x = nota)) +
+  geom_histogram(bins = 10)
+```
+
+## 1.4 Faceting
+
+16. Dispersión dividida en paneles por carrera.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota)) +
+  geom_point() +
+  facet_wrap(~ carrera)
+```
+
+17. Usa facet_wrap para dividir el gráfico por carrera.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 3) +
+  facet_wrap(~ carrera, nrow = 2)
+```
+
+18. Usa facet_grid dividiendo por género y major simultáneamente.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero)) +
+  geom_point(size = 3) +
+  facet_grid(genero ~ carrera)
+```
+
+## 1.5 Personalización estética
+
+19\. Asigna una forma de punto distinta según el major.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, shape = carrera)) +
+  geom_point(size = 3)
+```
+
+20. Gráfico completo con color por género, tamaño por puntaje, regresión y tema minimal.
+
+```{r}
+ggplot(Tomasinos, aes(x = horas_de_estudio, y = nota, color = genero, linewidth = nota)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal()
+```
+
+# 2 Ejercicio: Visualización de Data Bunisses con ggplot2.
+
+A continuación vamos a trabajar la siguiente situación:
+
+Una empresa que vende cabinas de sonido profesional tiene 4 sedes en la Bogota, se toma un registro de las ventas de la semana anterior en millones de pesos colombianos junto con la cantidad de retención en impuestos. Ademas de ello los empleados (El month lo dejo en ingles ya que no permite cambiarlo).
+
+```{r}
+ventas <- data.frame(
+month = rep(month.abb[1:12], 4),
+localidad = rep(c("Chapinero","Bosa","Candelaria","Kennedy"), each = 12),
+ventas = c(
+12,13,13,14,15,16,17,17,16,15,14,13,10,11,11,12,13,14,14,14,13,13,12,11,9,10,10,11,12,12,13,12,12,11,11,10,8,9,9,10,10,11,11,11,10,10,9,9
+),
+impuestos = c(
+2.0,2.2,2.1,2.3,2.5,2.6,2.8,2.7,2.6,2.4,2.3,2.2,1.8,1.9,1.8,2.0,2.2,2.3,2.4,2.3,2.2,2.1,2.0,1.9,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.0,1.9,1.8,1.7,1.6,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.7,1.6,1.5,1.4,1.3
+),
+empleados = rep(c(5,4,4,3), each = 12))
+```
+
+## 2.1 Visualización básica
+
+1.  Gráfico de dispersión entre gasto en marketing y ventas.
+
+```{r}
+ ggplot(ventas, aes(impuestos, ventas)) +
+geom_point()
+```
+
+2.  Cambia el color de los puntos a naranja oscuro.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas)) +
+geom_point(color = "darkorange")
+```
+
+3.  Mapea la región al color de los puntos.
+
+```{r}
+ ggplot(ventas, aes(impuestos, ventas, color = localidad)) +
+geom_point()
+```
+
+4.  Aumenta el tamaño de los puntos.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas)) +
+geom_point(size = 3)
+```
+
+5.  Agrega título: Ventas vs Inversión en Marketing.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas)) +
+geom_point() +
+ggtitle("Ventas_vs_Impuestos")
+```
+
+## 2.2 Etiquetas y temas
+
+6.  Agrega etiquetas a los ejes.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas)) +
+geom_point() +
+labs(x = "impuestos", y = "ventas")
+```
+
+7.  Usa el tema theme_minimal().
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas)) +
+geom_point() +
+theme_minimal()
+```
+
+8.  Centra el título.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas)) +
+geom_point() +
+theme(axis.text = element_text(size = 12))
+
+```
+
+9.  Cambia el tamaño del texto de los ejes.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas)) +
+geom_point() +
+theme(axis.text = element_text(size = 12))
+
+```
+
+10. Coloca la leyenda en la parte inferior.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas, color = localidad)) +
+geom_point() +
+theme(legend.position = "tope")
+```
+
+## 2.3 Visualización temporal
+
+11. Crea un gráfico de líneas de ventas por mes.
+
+```{r}
+ggplot(ventas, aes(month, ventas)) +
+geom_line()
+```
+
+12. Mapea la región al color de las líneas.
+
+```{r}
+ggplot(ventas, aes(month, ventas, color = localidad)) +
+geom_line()
+```
+
+13. Agrega puntos al gráfico de líneas.
+
+```{r}
+ggplot(ventas, aes(month, ventas, color = localidad)) +
+geom_line() +
+geom_point()
+```
+
+14. Rota las etiquetas del eje x.
+
+```{r}
+ggplot(ventas, aes(month, ventas, color = localidad, group = localidad)) +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+15. Resalta únicamente la región Chapinero.
+
+```{r}
+ggplot(subset(ventas, localidad == "Chapinero"), aes(month, ventas)) +
+geom_line(color = "gold") +
+geom_point()
+```
+
+## 2.4 Gráficos de distribución
+
+16. Crea un boxplot de ventas por región.
+
+```{r}
+ggplot(ventas, aes(localidad, ventas)) +
+  geom_boxplot()
+```
+
+17. Crea un histograma de impuestos.
+
+```{r}
+ggplot(ventas, aes(impuestos)) +
+  geom_histogram(bins = 10)
+```
+
+## 2.5 Faceting
+
+18. Crea gráficos de líneas divididos en paneles por localidad.
+
+```{r}
+ggplot(ventas, aes(month, ventas, color = localidad, group = localidad)) +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+19. Usa facet_wrap para dividir el gráfico por localidad.
+
+```{r}
+ggplot(ventas, aes(month, ventas, group = localidad)) +
+  geom_line() +
+  facet_wrap(~localidad)
+```
+
+20. Gráfico completo con gasto en impuestos, ventas, color por localidad, tamaño por empleados y regresión.
+
+```{r}
+ggplot(ventas, aes(impuestos, ventas,
+color = localidad,linewidth = empleados)) +geom_point() +
+geom_smooth(method = "lm", se = FALSE) +
+theme_minimal()
+  
+
+```
+
+## 3 Ejercicios con Kaggle Dataset
+
+Ahora trabajaremos con una lista de cancelaciones junto con datos como el tipo de contrato,el servicio de Internet y los cargos tanto mensuales como totales. Junto con la permanencia.
+
+```{r}
+churn <- data.frame(
+  permanencia = c(1,5,10,12,24,36,48,60,72,3,6,9,15,18,30,42,54,66,70,8),
+  cargos_mensuales = c(70,75,80,85,90,95,100,105,110,65,72,78,82,88,92,98,102,108,112,76),
+  cargos_totales = c(70,375,800,1020,2160,3420,4800,6300,7920,195,432,702,1230,1584,2760,4116,5508,7128,7840,608),
+  cancelacion = rep(c("Si","No"), 10),
+  contrato = rep(c("Mes a mes","Un año","Dos años","Mes a mes"), 5),
+  servicio_internet = rep(c("DSL","Fibra optica","DSL","No"), 5)
+)
+```
+
+# 3.1 Exercises
+
+1.  Gráfico de dispersión básico entre cargos mensuales y permanencia.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  geom_point()
+```
+
+2.  Continuamos con el mismo gráfico, pero coloreando si el cliente cancelo o no
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales, color = cancelacion)) +
+  geom_point()
+```
+
+3.  Agregamos una linea de regresion lineal al grafico de dispersión
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+4.  Aplica tema minimalista al gráfico.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  geom_point() +
+  theme_minimal()
+```
+
+5.  Agrega título al gráfico
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  geom_point() +
+  ggtitle("Cargos del Cliente vs Permanencia")
+```
+
+6.  Boxplot comparando cargos mensuales entre clientes que cancelaron y no.
+
+```{r}
+ggplot(churn, aes(cancelacion, cargos_mensuales)) +
+  geom_boxplot()
+```
+
+7.  Histograma de la distribución de permanencia.
+
+```{r}
+ggplot(churn, aes(permanencia)) +
+  geom_histogram()
+```
+
+8.  Mismo histograma pero con solo 5 barras.
+
+```{r}
+ggplot(churn, aes(permanencia)) +
+  geom_histogram(bins = 5)
+```
+
+9.  Gráfico de violín comparando cargos mensuales por tipo de contrato.
+
+```{r}
+ggplot(churn, aes(contrato, cargos_mensuales)) +
+  geom_violin()
+```
+
+10. Curvas de densidad de cargos mensuales separadas por cancelación.
+
+```{r}
+ggplot(churn, aes(cargos_mensuales, fill = cancelacion)) +
+  geom_density(alpha = 0.5)
+```
+
+11. Gráfico de barras contando clientes por tipo de contrato.
+
+```{r}
+ggplot(churn, aes(contrato)) +
+  geom_bar()
+```
+
+12. Mismo gráfico de barras diferenciando por cancelación con colores.
+
+```{r}
+ggplot(churn, aes(contrato, fill = cancelacion)) +
+  geom_bar()
+```
+
+13. Dispersión dividida en paneles por tipo de servicio de internet.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  geom_point() +
+  facet_wrap(~servicio_internet)
+```
+
+14. Dispersión dividida en paneles por tipo de contrato.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  geom_point() +
+  facet_wrap(~contrato)
+```
+
+15. Línea que muestra el promedio de cargos mensuales por permanencia.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  stat_summary(fun = mean, geom = "line")
+```
+
+16. Dispersión con color por cancelación y tamaño por cargos mensuales.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_totales, color = cancelacion, size = cargos_mensuales)) +
+  geom_point()
+```
+
+17. Puntos dispersados aleatoriamente entre permanencia y cancelación.
+
+```{r}
+ggplot(churn, aes(permanencia, cancelacion)) +
+  geom_jitter()
+```
+
+18. Puntos semitransparentes para visualizar superposición de datos.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales)) +
+  geom_point(alpha = 0.4)
+```
+
+19. Dispersión con leyenda ubicada en la parte inferior.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales, color = cancelacion)) +
+  geom_point() +
+  theme(legend.position = "bottom")
+```
+
+20. Gráfico completo con puntos, regresión, tema minimal y etiquetas personalizadas.
+
+```{r}
+ggplot(churn, aes(permanencia, cargos_mensuales, color = cancelacion)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_minimal() +
+  labs(title = "Análisis de Cancelación de Clientes", x = "Permanencia", y = "Cargos Mensuales")
+```
+
+# 4 Ejercicio. Laboratorio ggplot2: Churn de Clientes de Telco (Conjunto de Datos de Kaggle)
+
+Desarrollaremos el siguiente ejercicio, en primera instancia es necesario descargar el siguiente paquete.
+
+```{r}
+getwd()
+```
+
+\
+
+```{r}
+library(readr)
+library(tidyverse)
+churn <- read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
+churn$Churn <- as.factor(churn$Churn)
+churn$Contract <- as.factor(churn$Contract)
+churn$InternetService <- as.factor(churn$InternetService)
+```
+
+```{r}
+head(churn)
+
+```
+
+1.  Histograma de la distribución de permanencia de clientes.
+
+    ```{r}
+    ggplot(churn, aes(tenure)) +
+    geom_histogram(bins = 30)
+    ```
+
+2.  Histograma de la distribución de cargos mensuales.
+
+    ```{r}
+    ggplot(churn, aes(MonthlyCharges)) +
+    geom_histogram(bins = 30)
+    ```
+
+3.  Histograma de la distribución de cargos totales.
+
+    ```{r}
+    ggplot(churn, aes(TotalCharges)) +
+    geom_histogram(bins = 30)
+    ```
+
+4.  Gráfico de barras mostrando la proporción de cancelación.
+
+    ```{r}
+    ggplot(churn, aes(Churn)) +
+    geom_bar()
+    ```
+
+5.  Boxplot comparando cargos mensuales entre clientes que cancelaron y no.
+
+    ```{r}
+    ggplot(churn, aes(Churn, MonthlyCharges)) +
+    geom_boxplot()
+    ```
+
+6.  Curvas de densidad de cargos mensuales separadas por cancelación.
+
+    ```{r}
+    ggplot(churn, aes(MonthlyCharges, fill = Churn)) +
+    geom_density(alpha = 0.4)
+    ```
+
+7.  Barras apiladas mostrando cancelación por tipo de contrato.
+
+    ```{r}
+    ggplot(churn, aes(Contract, fill = Churn)) +
+    geom_bar(position = "fill")
+    ```
+
+8.  Barras apiladas mostrando cancelación por tipo de servicio de internet.
+
+    ```{r}
+    ggplot(churn, aes(InternetService, fill = Churn)) +
+    geom_bar(position = "fill")
+    ```
+
+9.  Dispersión entre permanencia y cargos mensuales.
+
+    ```{r}
+    ggplot(churn, aes(tenure, MonthlyCharges)) +
+    geom_point(alpha = 0.4)
+    ```
+
+10. Mismo gráfico coloreando los puntos según cancelación.
+
+    ```{r}
+    ggplot(churn, aes(tenure, MonthlyCharges, color = Churn)) +
+    geom_point(alpha = 0.4)
+    ```
+
+11. Agrega línea de regresión al gráfico de dispersión por cancelación.
+
+    ```{r}
+    ggplot(churn, aes(tenure, MonthlyCharges, color = Churn)) +
+    geom_point(alpha = 0.4) +
+    geom_smooth(method = "lm")
+    ```
+
+12. Dispersión dividida en paneles por tipo de contrato.
+
+    ```{r}
+    ggplot(churn, aes(tenure, MonthlyCharges)) +
+    geom_point(alpha = 0.4) +
+    facet_wrap(~Contract)
+    ```
+
+13. Dispersión dividida en paneles por tipo de servicio de internet.
+
+    ```{r}
+    ggplot(churn, aes(tenure, MonthlyCharges)) +
+    geom_point(alpha = 0.4) +
+    facet_wrap(~InternetService)
+    ```
+
+14. Gráfico de burbujas con permanencia, cargos totales, tamaño y color por cancelación.
+
+    ```{r}
+    ggplot(churn, aes(tenure, TotalCharges,
+    size = MonthlyCharges,
+    color = Churn)) +
+    geom_point(alpha = 0.6)
+    ```
+
+15. Gráfico estilo publicación con regresión, tema minimal y etiquetas personalizadas.
+
+```{r}
+ggplot(churn, aes(tenure, MonthlyCharges, color = Churn)) +
+geom_point(alpha = 0.4) +
+geom_smooth(se = FALSE) +
+theme_minimal() +
+labs(title = "Cliente Churn Analisis",
+x = "Antiguedad_del_Cliente",
+y = "Cargos_Mensuales")
+```
+
+\
