@@ -1,0 +1,245 @@
+---
+title: "Ejercicios_dplyr"
+author: "Juan Cordoba"
+format: html
+editor: visual
+---
+
+## 
+
+# Ejercicios con dplyr
+
+# Juan Córdoba - Estadística Descriptiva
+
+Buen día, en el siguiente documento trabajaremos con el paquete "dplyr", en este caso trabajaremos sus principales funciones ademas de ello emplearemos el dataset Gapminder, que son un grupo de datos económicos y sociales de países del mundo (incluye datos como esperanza de vida,PIB, población, etc).
+
+## A. Instalar y aplicar paquetes dplyr y gapminder
+
+Es fundamental verificar al inicio si estos paquetes están instalados.
+
+```{r}
+library(dplyr)
+library(gapminder)
+```
+
+Ahora bien podemos proseguir con el desarrollo de los ejercicios.
+
+La cantidad de ejercicios que se van a realizar son 20
+
+1.  Seleccione solo las columnas «país», «año» y «esperanza de vida».
+
+    Observaremos como se despliega los datos tanto de país, el año y la esperanza de vida. (Mas de 1,600 filas)
+
+    ```{r}
+    gapminder %>%
+     select(country, year, lifeExp)
+
+    ```
+
+2.  Filtre el conjunto de datos para mostrar solo las observaciones del año 2007.
+
+    La función de filter permite filtrar los datos según la época que se desee conocer.
+
+    ```{r}
+    gapminder %>%
+     filter(year == 2007)
+    ```
+
+3.  Filtre el conjunto de datos para mostrar solo los países de Asia.
+
+    Esto ayuda a facilitar la búsqueda de países de un continente en especifico.
+
+    ```{r}
+    gapminder %>%
+     filter(continent == "Asia")
+    ```
+
+4.  Seleccione las filas donde la esperanza de vida sea superior a 70 años.
+
+    Facilita la búsqueda para un grupo de datos que sea mayor o menos a cierto filtro, en este caso que la esperanza de vida sea superior a 70 años.
+
+    ```{r}
+    gapminder %>%
+     filter(lifeExp > 70)
+    ```
+
+5.  Ordene el conjunto de datos por esperanza de vida en orden ascendente.
+
+    Podemos observar como los datos se mostraran en un orden ascendente acorde con la esperanza de vida.
+
+    ```{r}
+    gapminder %>%
+     arrange(lifeExp)
+    ```
+
+6.  Ordene el conjunto de datos por PIB per cápita en orden descendente.
+
+    Como resultado los datos se encuentran con el orden deseado con la medida de PIB
+
+    ```{r}
+    gapminder %>%
+     arrange(desc(gdpPercap))
+    ```
+
+7.  Cree una nueva columna llamada «gdp_total» como gdpPercap \* pop.
+
+    En este momento crearemos una nueva columna
+
+    ```{r}
+    gapminder %>%
+     mutate(gdp_total = gdpPercap * pop)
+    ```
+
+8.  Filtre los países con una población superior a 100 millones en 2007.
+
+    Como resultado tan solo son 10 los países que su poblacion es superior a 100 millones en 2007.
+
+    ```{r}
+    gapminder %>%
+     filter(year == 2007, pop > 100000000)
+    ```
+
+9.  Seleccione los países de Europa y muestre solo las columnas «país» y «gdpPercap».
+
+    Se muestran mas de 350 filas segun el filtro aplicado.
+
+    ```{r}
+    gapminder %>%
+     filter(continent == "Europe") %>%
+     select(country, gdpPercap)
+
+    ```
+
+10. Calcule la esperanza de vida promedio para cada continente.
+
+    Observamos como África cuenta con el promedio de vida mas bajo, mientras que Oceanía lidera la lista
+
+    ```{r}
+    gapminder %>%
+     group_by(continent) %>%
+     summarise(avg_lifeExp = mean(lifeExp))
+    ```
+
+11. Calcule el PIB per cápita promedio para cada continente y año.
+
+    Observamos como se organiza el PIB para cada continente en orden de año
+
+    ```{r}
+    gapminder %>%
+     group_by(continent, year) %>%
+     summarise(avg_gdpPercap = mean(gdpPercap))
+    ```
+
+12. Calcule la esperanza de vida máxima para cada continente.
+
+    La esperanza de vida muestra resultados similares a los anteriores, En donde África se ve con una drástica diferencia respecto a los demás.
+
+    ```{r}
+    gapminder %>%
+     group_by(continent) %>%
+     summarise(max_lifeExp = max(lifeExp))
+    ```
+
+13. Cuente cuántos países hay en cada continente.
+
+    El continente con mayor países es áfrica mientras que Oceanía cuenta solamente con 2.
+
+    ```{r}
+    gapminder %>%
+     group_by(continent) %>%
+     summarise(n_countries = n_distinct(country))
+    ```
+
+14.  Calcula la población total de cada continente.
+
+    Se observa la población total de cada continente, en donde Oceanía es el continente con menor cantidad de población total.
+
+    ```{r}
+    gapminder %>%
+     group_by(continent) %>%
+     summarise(total_pop = sum(pop))
+
+    ```
+
+15. Filtra el conjunto de datos para América y calcula la esperanza de vida promedio por año.
+
+    La esperanza de vida a lo largo del tiempo en América ha incrementado de manera progresiva y continua.
+
+    ```{r}
+    gapminder %>%
+     filter(continent == "Americas") %>%
+     group_by(year) %>%
+     summarise(avg_lifeExp = mean(lifeExp))
+
+    ```
+
+16. Crea un conjunto de datos con los 10 países con el PIB per cápita más alto en 2007.
+
+    En su mayoría el conjunto de datos lo conforma países de Europa y Asia. Junto con Canadá y Estados Unidos.
+
+    ```{r}
+    gapminder %>%
+     filter(year == 2007) %>%
+     arrange(desc(gdpPercap)) %>%
+     slice_head(n = 10)
+
+    ```
+
+17. Identifica el país con la mayor esperanza de vida en cada año.
+
+    La lista solo se conforma con países de Europa y Asia.
+
+    ```{r}
+    gapminder %>%
+     group_by(year) %>%
+     slice_max(lifeExp, n = 1)
+    ```
+
+18. Calcula la mediana del PIB per cápita para cada continente.
+
+    Europa y Oceanía cuentan con la mayor mediana del PIB per cápita.
+
+    ```{r}
+    gapminder %>%
+     group_by(continent) %>%
+     summarise(median_gdpPercap = median(gdpPercap))
+    ```
+
+19. Calcula la variación en la esperanza de vida de cada país entre 1952 y 2007.
+
+    Se filtran los datos entre un lapso de tiempo, contando con mas de 140 filas.
+
+    ```{r}
+    gapminder %>%
+     filter(year %in% c(1952, 2007)) %>%
+     select(country, year, lifeExp) %>%
+     tidyr::pivot_wider(names_from = year, values_from = lifeExp) %>%
+     mutate(change_lifeExp = `2007` - `1952`)
+
+    ```
+
+20. Identifica los 5 países con el mayor aumento del PIB per cápita a lo largo del tiempo.
+
+    Singapur, Noruega, Hong Kong, Irlanda y Austria son los países que aparecen en esta lista.
+
+    ```{r}
+    gapminder %>%
+     filter(year %in% c(1952, 2007)) %>%
+     select(country, year, gdpPercap) %>%
+     tidyr::pivot_wider(names_from = year, values_from = gdpPercap) %>%
+     mutate(change_gdp = `2007` - `1952`) %>%
+     arrange(desc(change_gdp)) %>%
+     slice_head(n = 5)
+    ```
+
+# Ejercicio extra
+
+Se muestra el promedio de esperanza de vida de cada continente para el año 2007.
+
+```{r}
+gapminder %>%
+ filter(year == 2007) %>%
+ group_by(continent) %>%
+ summarise(avg_lifeExp = mean(lifeExp)) %>%
+ arrange(desc(avg_lifeExp))
+```
